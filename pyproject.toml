@@ -9,6 +9,7 @@ python = "^3.10"
 selenium = "^4.4.3"
 rich = "^12.5.1"
 stem = "^1.8.0"
+typer = {extras = ["all"], version = "^0.6.1"}
 
 [tool.poetry.dev-dependencies]
 

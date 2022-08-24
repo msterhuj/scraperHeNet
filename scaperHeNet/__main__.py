@@ -1,24 +1,11 @@
-import time
 import multiprocessing
 
-from rich import print
-from selenium import webdriver
+import typer
 
-import tor
+from .scraper import app as scraper_app
 
-def get(url: str):
-    driver = tor.get_chrome_driver()
-    try:
-        driver.get(url)
-        data = driver.page_source
-        driver.quit()
-        return data
-    except Exception as e:
-        print(e)
-        driver.quit()
 
-if __name__ == '__main__':
-    
+def dev():
     chrome_driver_total = 4
 
     p = multiprocessing.Pool(processes=chrome_driver_total)
@@ -27,8 +14,17 @@ if __name__ == '__main__':
         "https://check.torproject.org/api/ip",
         "https://ifconfig.me/ip"
     ]
+    get = None
 
     result = p.map(get, urls)
     print(result)
     p.close()
     p.join()
+
+
+app = typer.Typer()
+
+app.add_typer(scraper_app, name="scrap")
+
+if __name__ == "__main__":
+    app()
