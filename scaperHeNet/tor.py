@@ -1,12 +1,4 @@
-import os.path
-
 from selenium import webdriver
-
-import json
-import socks
-import socket
-from urllib.request import Request, urlopen
-from time import sleep
 from stem import Signal
 from stem.control import Controller
 
@@ -21,6 +13,26 @@ def get_chrome_driver():
     options.add_argument('--proxy-server=socks5://tor:9050')
     driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", options=options)
     return driver
+
+
+def close_tor_driver(driver: webdriver):
+    driver.quit()
+
+
+def get_url(url: str, driver: webdriver):
+    """
+    Try to get data and if driver crash its close the session
+    :param url:
+    :param driver:
+    :return:
+    """
+    try:
+        driver.get(url)
+        data = driver.page_source
+        return data
+    except Exception as e:
+        print(e)
+        driver.quit()
 
 
 def get_new_tor_ip(controller: Controller):
