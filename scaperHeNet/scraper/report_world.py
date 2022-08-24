@@ -28,7 +28,3 @@ def to_json(file_path):
                 data.append(row)
     utils.save_to_json(data, "data/json/report_world/report_world.json")
     return data
-
-
-def push_to_mongo(file_path):
-    return None

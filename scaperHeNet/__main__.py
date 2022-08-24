@@ -7,7 +7,6 @@ from . import scraper
 app = typer.Typer()
 
 
-@app.command()
 def dev():
     chrome_driver_total = 4
 
@@ -48,6 +47,9 @@ def report_world(scrap: bool = False, convert: bool = False, force: bool = False
         print("Converting report world")
         scraper.report_world.to_json(file_path)
 
+@app.command()
+def asn():
+    scraper.asn.scrap()
 
 if __name__ == "__main__":
     app()

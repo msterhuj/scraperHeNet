@@ -20,19 +20,12 @@ def close_tor_driver(driver: webdriver):
 
 
 def get_url(url: str, driver: webdriver):
-    """
-    Try to get data and if driver crash its close the session
-    :param url:
-    :param driver:
-    :return:
-    """
     try:
         driver.get(url)
         data = driver.page_source
         return data
     except Exception as e:
         print(e)
-        driver.quit()
 
 
 def get_new_tor_ip(controller: Controller):

@@ -9,6 +9,7 @@ dir_type = [
 
 dir_data = [
     "report_world",
+    "asn",
 ]
 
 for dt in dir_type:
