@@ -7,23 +7,6 @@ from . import scraper
 app = typer.Typer()
 
 
-def dev():
-    chrome_driver_total = 4
-
-    p = multiprocessing.Pool(processes=chrome_driver_total)
-
-    urls = [
-        "https://check.torproject.org/api/ip",
-        "https://ifconfig.me/ip"
-    ]
-    get = None
-
-    result = p.map(get, urls)
-    print(result)
-    p.close()
-    p.join()
-
-
 @app.command()
 def report_world(scrap: bool = False, convert: bool = False, force: bool = False):
     if not scrap and not convert:
@@ -47,9 +30,34 @@ def report_world(scrap: bool = False, convert: bool = False, force: bool = False
         print("Converting report world")
         scraper.report_world.to_json(file_path)
 
+
 @app.command()
-def asn():
-    scraper.asn.scrap()
+def asn(scrap: bool = False, convert: bool = False):
+    if not scrap and not convert:
+        print("You must specify at least one of the following options: --scrap or --convert")
+        return
+
+    if scrap:
+        scraper.asn.scrap()
+
+    if convert:
+        scraper.asn.to_json()
+
+
+@app.command(name="range")
+def range_cmd(scrap: bool = False, convert: bool = False):
+    if not scrap and not convert:
+        print("You must specify at least one of the following options: --scrap or --convert")
+        return
+
+    if scrap:
+        scraper.range.scrap()
+
+    if convert:
+        scraper.range.to_json()
+
 
 if __name__ == "__main__":
     app()
+    # todo tester le switch d'ip
+    #pass

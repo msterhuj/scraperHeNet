@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup
 
-from scaperHeNet import tor, utils
+from scraperHeNet import tor, utils
 
 
 def scrap(file_path):
     driver = tor.get_chrome_driver()
-    data = tor.get_url("https://bgp.he.net/report/world", driver)
+    driver = tor.get_url("https://bgp.he.net/report/world", driver)
+    data = driver.page_source
     if data:
         with open(file_path, "w") as f:
             f.write(data)
@@ -26,5 +27,5 @@ def to_json(file_path):
             row["details"] = tds[-1].find("a")["href"]
             if len(row) > 0:
                 data.append(row)
-    utils.save_to_json(data, "data/json/report_world/report_world.json")
+    utils.save_to_json(data, "data/json/report_world.json")
     return data
