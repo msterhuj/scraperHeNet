@@ -6,6 +6,8 @@ data_dir = [
     "data/html/report_world",
     "data/html/asn",
     "data/html/range",
+    "data/html/report_dns",
+    "data/html/tld",
     "data/json",
 ]
 

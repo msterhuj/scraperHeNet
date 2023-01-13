@@ -9,6 +9,7 @@ from rich.progress import track
 from bs4 import BeautifulSoup
 
 from scraperHeNet import tor, utils
+from scraperHeNet.mongo import db
 
 
 def __scrap_pool__(doc: dict):
@@ -22,11 +23,11 @@ def __scrap_pool__(doc: dict):
             driver = tor.get_url(url, driver)
             data = driver.page_source
             if data:
-                with open(f"data/html/asn/{country['CC']}.html", "w") as f:
+                with open(f"data/html/asn/{country['cc']}.html", "w") as f:
                     f.write(data)
-                print(f"{pname} {country['CC']} scraped")
+                print(f"{pname} {country['cc']} scraped")
             else:
-                print(f"{pname} {country['CC']} not scraped")
+                print(f"{pname} {country['cc']} not scraped")
                 failed.append(country)
     except Exception as e:
         print(e)
@@ -38,7 +39,7 @@ def __scrap_pool__(doc: dict):
 def scrap():
     with ropen("data/json/report_world.json", "r") as f:
         data = json.load(f)
-    chunk_size = 5
+    chunk_size = 10
     urls = list(utils.split(data, chunk_size))
     pool = Pool(processes=chunk_size)
     failed = pool.map(__scrap_pool__, urls)
@@ -55,13 +56,34 @@ def to_json():
                 table = soup.find('table', id='asns')
                 cols = [utils.sanitize_string(th.get_text()) for th in table.find('tr').find_all('th')]
 
+                footer = soup.find("div", id="footer")
+                date = utils.date_to_json(utils.convert_footer_to_date(str(footer.text).strip()))
+
                 for tr in table.find_all('tr')[1:]:
                     tds = tr.find_all('td')
                     row = {cols[i]: utils.sanitize_string(tds[i].get_text()) for i in range(len(cols))}
                     row["details"] = tds[0].find('a')['href']
-                    row["country"] = basename(file).split(".")[0]
+                    row["cc"] = basename(file).split(".")[0].lower()
+                    row["adjacencies_v4"] = int(row.pop("adjacencies-v4").replace(",", ""))
+                    row["routes_v4"] = int(row.pop("routes-v4").replace(",", ""))
+                    row["adjacencies_v6"] = int(row.pop("adjacencies-v6").replace(",", ""))
+                    row["routes_v6"] = int(row.pop("routes-v6").replace(",", ""))
+                    row["last_page_update"] = date
                     if len(row) > 0:
                         data.append(row)
             except AttributeError as e:
                 print(f"Error parsing {basename(file)} no table found")
     utils.save_to_json(data, "data/json/asn.json")
+
+
+def import_to_mongo():
+    db.asn.create_index("asn", unique=True)
+    db.asn.delete_many({})
+    with ropen("data/json/asn.json", "r") as f:
+        data = json.load(f)
+    for row in track(data):
+        del row["details"]
+        row["created_at"] = utils.get_current_time()
+        row["updated_at"] = row["created_at"]
+        row["last_page_update"] = utils.json_date_to_datetime(row["last_page_update"])
+    db.asn.insert_many(data)
