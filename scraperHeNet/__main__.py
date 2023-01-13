@@ -29,8 +29,9 @@ def report_world(scrap: bool = False, convert: bool = False, import_mongo: bool 
         scraper.report_world.import_to_mongo()
         print("Done")
 
+
 @app.command()
-def report_dns(scrap: bool = False, convert: bool = False,):
+def report_dns(scrap: bool = False, convert: bool = False, ):
     if not scrap and not convert:
         print("You must specify at least one of the following options: --scrap or --convert")
         return
@@ -43,6 +44,7 @@ def report_dns(scrap: bool = False, convert: bool = False,):
     if convert:
         print("Converting report dns")
         scraper.report_dns.to_json()
+
 
 @app.command()
 def tld(scrap: bool = False, convert: bool = False, import_mongo: bool = False):
@@ -58,7 +60,8 @@ def tld(scrap: bool = False, convert: bool = False, import_mongo: bool = False):
 
     if import_mongo:
         scraper.tld_info.import_to_mongo()
-    
+
+
 @app.command()
 def asn(scrap: bool = False, convert: bool = False, import_mongo: bool = False):
     if not scrap and not convert and not import_mongo:

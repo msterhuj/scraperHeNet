@@ -3,11 +3,16 @@ services:
 
   tor:
     build:
-      context: docker
+      context: docker/tor
       dockerfile: Dockerfile
     ports:
       - "9050:9050"
       - "9051:9051"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 
   selenium-event-bus:
     image: selenium/event-bus:4.4.0-20220812
