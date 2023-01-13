@@ -1,0 +1,12 @@
+
+broker_url = "redis://localhost:6379/0"
+
+selenium_remote_url = "http://127.0.0.1:4444/wd/hub"
+
+tor_url_test = "https://check.torproject.org/api/ip"
+tor_control_address = "127.0.0.1"
+tor_control_port = 9051
+tor_control_password = "admin"
+
+mongodb_url = "mongodb://localhost:27017/"
+mongodb_db = "interdex"

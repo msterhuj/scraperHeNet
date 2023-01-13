@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "bgp.he.net"
+name = "interdex"
 version = "0.1.0"
 description = ""
 authors = ["Gabin Lanore <gabin.lanore@gmail.com>"]
@@ -9,10 +9,11 @@ python = "^3.10"
 selenium = "^4.4.3"
 rich = "^12.5.1"
 stem = "^1.8.0"
-typer = {extras = ["all"], version = "^0.6.1"}
+typer = {extras = ["all"], version = "^0.7.0"}
 beautifulsoup4 = "^4.11.1"
 pymongo = "^4.2.0"
 toml = "^0.10.2"
+celery = {extras = ["redis"], version = "^5.2.7"}
 
 [tool.poetry.dev-dependencies]
 
