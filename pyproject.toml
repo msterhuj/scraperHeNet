@@ -11,6 +11,7 @@ rich = "^12.5.1"
 stem = "^1.8.0"
 typer = {extras = ["all"], version = "^0.6.1"}
 beautifulsoup4 = "^4.11.1"
+pymongo = "^4.2.0"
 
 [tool.poetry.dev-dependencies]
 
